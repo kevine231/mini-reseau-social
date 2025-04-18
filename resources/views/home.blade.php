@@ -28,10 +28,4 @@
             <p class="card-text">Ceci est votre fil d'actualité.</p>
         </div>
     </div>
-
-
-
-
       @endsection
-
-
