@@ -6,33 +6,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-
-
-
-Route::get('/home', function () {
-    return view('home');
-})->name('home');
-
-Route::get('/bienvenue', function () {
-    return view('bienvenue');
-})->name('bienvenue');
-
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-
-
-
-Route::post('/logout', function (Request $request) {
-    Auth::logout();
-    $request->session()->invalidate();
-    $request->session()->regenerateToken();
-    return redirect('/login');
-})->name('logout');
-
 
 Route::get('/', function () {
     return view('home');  // Route pour afficher la page d'accueil
