@@ -1,5 +1,5 @@
 <?php
 
-use App\Http\Controllers\Api\RegisterController;
+use App\Http\Controllers\RegisterController;
 
 Route::post('/register', [RegisterController::class, 'store']);

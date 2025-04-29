@@ -2,31 +2,26 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Gate;
-use App\Models\User;
-use App\Policies\DashboardPolicy; // Ajoute la policy ici
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Enregistrez les services d'application.
-     *
-     * @return void
+     * Register any application services.
      */
-    public function register()
+    public function register(): void
     {
         //
     }
 
     /**
-     * Bootstrap les services d'application.
-     *
-     * @return void
+     * Bootstrap any application services.
      */
-    public function boot()
+    public function boot(): void
     {
-        // Enregistrement de la policy associée à User
-        Gate::policy(User::class, DashboardPolicy::class);
+        Vite::prefetch(concurrency: 3);
+        Schema::defaultStringLength(191);
     }
 }

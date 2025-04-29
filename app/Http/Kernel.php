@@ -8,6 +8,8 @@ class Kernel extends HttpKernel
 {
     protected $middleware = [
         // middleware globaux ici
+        'admin' => \App\Http\Middleware\AdminMiddleware::class,
+
     ];
 
     protected $middlewareGroups = [
