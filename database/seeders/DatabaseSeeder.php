@@ -13,11 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Créer l'utilisateur de test seulement s'il n'existe pas déjà
+        if (!User::where('email', 'toto@example.com')->exists()) {
+            User::factory()->create([
+                'name' => 'Test User',
+                'email' => 'test@example.com',
+            ]);
+        }
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Exécuter le seeder des centres d'intérêt
+        $this->call([
+            InterestSeeder::class,
+            PostSeeder::class,
         ]);
     }
 }

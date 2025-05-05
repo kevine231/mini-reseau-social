@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -30,6 +31,7 @@ class UserController extends Controller
     }
 
     // Méthode pour désactiver un utilisateur
+
     public function deactivate($id)
     {
         // Trouver l'utilisateur par ID
@@ -50,6 +52,8 @@ class UserController extends Controller
         // Si l'utilisateur n'est pas trouvé, retourner une erreur
         return redirect()->back()->with('error', 'Utilisateur non trouvé.');
     }
+
+
 
     public function index()
 {

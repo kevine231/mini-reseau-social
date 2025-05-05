@@ -1,31 +1,61 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
-use App\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests; // Ajoute cette ligne pour l'accès à authorize()
-use App\Http\Controllers\Controller; // Assure-toi que tu importes la classe Controller
+use Inertia\Inertia;
+use App\Models\User;
+use App\Models\Group;
+use App\Models\Post;
 
 class DashboardController extends Controller
 {
-    use AuthorizesRequests; // Ajoute ce trait pour avoir accès à la méthode authorize()
-
-    // Fonction pour afficher le tableau de bord
     public function index()
     {
-        // Vérifie si l'utilisateur peut accéder au tableau de bord
-        $this->authorize('viewDashboard', User::class);
+        $user = auth()->user();
 
-        // Récupérer le nombre total d'utilisateurs inscrits
-        $totalUsers = User::count();
+        // Récupérer les données pour le dashboard
+        $suggestedGroups = Group::withCount('members')
+            ->latest()
+            ->take(3)
+            ->get()
+            ->map(function ($group) {
+                return [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'icon' => $group->icon ?? '👥',
+                    'members' => $group->members_count
+                ];
+            });
 
-        // Calculer le taux d'engagement (en fonction des utilisateurs actifs)
-        $activeUsers = User::where('active', 1)->count();
-        $engagement = $totalUsers > 0 ? ($activeUsers / $totalUsers) * 100 : 0;
+        $posts = Post::with('user')
+            ->latest()
+            ->take(10)
+            ->get()
+            ->map(function ($post) {
+                return [
+                    'id' => $post->id,
+                    'user' => [
+                        'name' => $post->user->name,
+                        'avatar' => $post->user->avatar
+                    ],
+                    'content' => $post->content,
+                    'time' => $post->created_at->diffForHumans(),
+                    'likes' => $post->likes_count,
+                    'comments' => $post->comments_count,
+                    'image' => $post->image
+                ];
+            });
 
-        // Passer les données à la vue
-        return view('dashboard', compact('totalUsers', 'engagement'));
+        return Inertia::render('User/Dashboard', [
+            'user' => [
+                'name' => $user->name,
+                'email' => $user->email,
+                'avatar' => $user->avatar
+            ],
+            'suggestedGroups' => $suggestedGroups,
+            'posts' => $posts
+        ]);
     }
 }
-
